@@ -1,0 +1,63 @@
+{
+	"info": {
+		"_postman_id": "1eefa067-69ea-42ff-a808-c51ab463a465",
+		"name": "Conexa Challenge",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27670555"
+	},
+	"item": [
+		{
+			"name": "Login Module",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"mail\": \"conexa@test.com\",\r\n  \"password\": \"abcd1234$ADC\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://us-central1-conexa-backend-challenge.cloudfunctions.net/login/login/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "https://us-central1-conexa-backend-challenge.cloudfunctions.net/login/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bussiness Module",
+			"item": [
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
