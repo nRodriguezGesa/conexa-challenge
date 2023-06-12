@@ -1,4 +1,10 @@
 {
+  "env": {
+    "DB_HOST": "db-conexa-challenge.sanmow8.mongodb.net",
+    "DB_USER":"conexa",
+    "DB_PASS":"conexa",
+    "USER_MODULE_BASE_URL":"https://us-central1-conexa-backend-challenge.cloudfunctions.net/users/"
+  },
   "functions": [
     {
       "source": ".",
@@ -10,11 +16,13 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint",
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
+      "https": {
+        "functionName": "api",
+        "allowInsecure": true
+      }
+
     }
     
   ]
+
 }
