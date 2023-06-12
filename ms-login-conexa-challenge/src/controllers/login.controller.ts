@@ -16,8 +16,8 @@ import {
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { ExceptionResponse } from 'src/utils/all.exception.filter';
 import { ApiTagsEnum } from 'src/enums/api.tags.enum';
+import BaseExceptionResponse from 'src/utils/base.exception.response';
 
 @Controller('login')
 export class LoginController {
@@ -40,7 +40,7 @@ export class LoginController {
     description: 'User created successfully',
   })
   @ApiConflictResponse({
-    type: ExceptionResponse,
+    type: BaseExceptionResponse,
     description: 'Duplicate mail',
   })
   @ApiTags(ApiTagsEnum.LOGIN)
@@ -73,11 +73,11 @@ export class LoginController {
     description: 'User created successfully',
   })
   @ApiNotFoundResponse({
-    type: ExceptionResponse,
+    type: BaseExceptionResponse,
     description: 'Mail not found',
   })
   @ApiUnauthorizedResponse({
-    type: ExceptionResponse,
+    type: BaseExceptionResponse,
     description: 'Incorrect password',
   })
   @ApiTags(ApiTagsEnum.LOGIN)

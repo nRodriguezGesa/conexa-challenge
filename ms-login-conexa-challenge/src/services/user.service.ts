@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-  ConflictException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import {
   AuthResponse,
   InputUserDto,
@@ -16,8 +10,9 @@ import PasswordHandler from 'src/utils/password.handler';
 import { JwtService } from '@nestjs/jwt';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
-import { AxiosError } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import { UserModuleEndpointsEnum } from 'src/enums/user.module.endpoints.enum';
+import BaseExceptionResponse from 'src/utils/base.exception.response';
 
 @Injectable()
 export class UserService {
@@ -32,7 +27,10 @@ export class UserService {
     );
     const user: User = await this.userRepository.findUser(inputUserDto);
     if (user != null) {
-      throw new ConflictException('Duplicate mail');
+      throw new BaseExceptionResponse(
+        HttpStatusCode.Conflict,
+        'Duplicate mail',
+      );
     }
     return new UserResponse(
       await this.userRepository.registerUser(inputUserDto),
@@ -42,7 +40,10 @@ export class UserService {
   async login(inputUserDto: InputUserDto): Promise<AuthResponse> {
     const user: User = await this.userRepository.findUser(inputUserDto);
     if (user == null) {
-      throw new NotFoundException('Mail not found');
+      throw new BaseExceptionResponse(
+        HttpStatusCode.NotFound,
+        'Mail not found',
+      );
     }
     if (
       !(await PasswordHandler.comparePassword(
@@ -50,7 +51,10 @@ export class UserService {
         user.password,
       ))
     ) {
-      throw new UnauthorizedException();
+      throw new BaseExceptionResponse(
+        HttpStatusCode.Unauthorized,
+        'Wrong password',
+      );
     }
     return new AuthResponse(
       await this.jwtService.signAsync({
@@ -60,18 +64,22 @@ export class UserService {
     );
   }
 
-  async getUsers(auth: string): Promise<UserResponse[]> {
+  async getUsers(
+    auth: string,
+    skip: number,
+    limit: number,
+    q: string,
+  ): Promise<UserResponse[]> {
     const access_token = auth.replace('Bearer ', '');
-    console.log(access_token);
     const headersRequest = {
-      'Content-Type': 'application/json', // afaik this one is not needed
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${access_token}`,
     };
 
     const { data } = await firstValueFrom(
       this.httpService
         .get(
-          `${process.env.USER_MODULE_BASE_URL}${UserModuleEndpointsEnum.USERS}`,
+          `${process.env.USER_MODULE_BASE_URL}${UserModuleEndpointsEnum.USERS}?skip=${skip}&limit=${limit}&q=${q}`,
           {
             headers: headersRequest,
           },
@@ -79,7 +87,10 @@ export class UserService {
         .pipe(
           catchError((error: AxiosError) => {
             Logger.error(error.response.data);
-            throw 'An error happened!';
+            throw new BaseExceptionResponse(
+              HttpStatusCode.InternalServerError,
+              'Request to bussiness module failed',
+            );
           }),
         ),
     );

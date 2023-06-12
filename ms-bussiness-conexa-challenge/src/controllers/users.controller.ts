@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Controller,
   Query,
-  HttpException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -21,8 +20,7 @@ import { ApiTagsEnum } from '../enums/api.tags.enum';
 import BaseResponse from '../models/base.response.mode';
 import { UserResponse } from '../models/users.model';
 import { UserService } from '../services/users.service';
-import { ExceptionResponse } from '../utils/all.exception.filter';
-
+import BaseExceptionResponse from 'src/utils/base.exception.response';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -45,7 +43,7 @@ export class UserController {
     description: 'Users',
   })
   @ApiUnauthorizedResponse({
-    type: ExceptionResponse,
+    type: BaseExceptionResponse,
     description: 'Unauthorized',
   })
   @ApiBearerAuth('access-token')
@@ -76,7 +74,10 @@ export class UserController {
     @Query('q') q = '',
   ): Promise<BaseResponse<UserResponse[]>> {
     if (skip < 0) {
-      throw new HttpException('Invalid skip value', HttpStatus.BAD_REQUEST);
+      throw new BaseExceptionResponse(
+        HttpStatus.BAD_REQUEST,
+        'Invalid skip value',
+      );
     }
     const response: any = await this.userService.getUsers(skip, limit, q);
     Logger.log(response);

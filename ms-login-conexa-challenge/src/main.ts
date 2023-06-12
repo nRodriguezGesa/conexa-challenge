@@ -3,7 +3,6 @@ import { LoginModule } from './modules/login.module';
 import helmet from 'helmet';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AllExceptionsFilter } from './utils/all.exception.filter';
 
 async function bootstrap() {
   const port = 3000;
@@ -27,13 +26,8 @@ async function bootstrap() {
     )
     .build();
   const app = await NestFactory.create(LoginModule, {
-    cors: true,
     logger: ['error', 'log'],
   });
-  app.useGlobalFilters(new AllExceptionsFilter());
-  app.setGlobalPrefix(globalPrefix);
-  const swaggerDocument = SwaggerModule.createDocument(app, swaggerOptions);
-  app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -41,6 +35,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.setGlobalPrefix(globalPrefix);
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerOptions);
+  app.use(helmet());
+
   SwaggerModule.setup(`${globalPrefix}/docs`, app, swaggerDocument);
   await app.listen(port);
   Logger.log(`Listen to port: ${port}`, 'App');

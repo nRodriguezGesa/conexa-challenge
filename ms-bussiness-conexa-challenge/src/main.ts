@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AllExceptionsFilter } from './utils/all.exception.filter';
 import { BussinessModule } from './modules/bussiness.module';
 
 async function bootstrap() {
@@ -32,7 +31,6 @@ async function bootstrap() {
     methods: ['GET'],
     origin: 'http://localhost:3000/',
   });
-  app.useGlobalFilters(new AllExceptionsFilter());
   app.setGlobalPrefix(globalPrefix);
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerOptions);
   app.useGlobalPipes(
