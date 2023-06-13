@@ -7,6 +7,7 @@ El proyecto se compone de 2 modulos(apps). Siendo 1 el login y el otro bussiness
 ## Running the app
 
 Para correr ambos modulos localmente se debe realizar:
+
 1- npm install
 
 2- npm run start:local
