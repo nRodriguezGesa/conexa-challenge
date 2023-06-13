@@ -10,6 +10,7 @@ Para correr ambos modulos localmente se debe realizar:
 1- npm install
 2- npm run start:local
 3- En consola habra un log con un link hacia el swagger donde se pueden realizar las pruebas de los endpoints
+4- Para usar el access_token se puede utilizar el boton "Authorize" que se encuentra en la parte superior derecha del swagger
 
 Se intento deployar ambos modulos en firebase functions y se logro, pero al hacer pruebas se vieron errores en los class-validators, swagger y demas.
 Por lo que el deploy no tuvo exito debido a la falta de tiempo

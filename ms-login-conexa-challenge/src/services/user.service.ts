@@ -26,7 +26,7 @@ export class UserService {
       inputUserDto.password,
     );
     const user: User = await this.userRepository.findUser(inputUserDto);
-    if (user != null) {
+    if (user !== null) {
       throw new BaseExceptionResponse(
         HttpStatusCode.Conflict,
         'Duplicate mail',

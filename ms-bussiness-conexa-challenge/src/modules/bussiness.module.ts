@@ -21,7 +21,7 @@ import { UserRepository } from '../repositories/users.repositories';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '120s' },
+      signOptions: { expiresIn: '360s' },
     }),
   ],
   controllers: [UserController],
